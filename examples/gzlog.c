@@ -914,6 +914,8 @@ int gzlog_compress(gzlog *logd)
 	struct log *log = logd;
 
 	/* check arguments */
+	log->id[sizeof(log->id) - 1] = '\0';
+	LOGID[sizeof(LOGID) - 1] = '\0'; 
 	if (log == NULL || strcmp(log->id, LOGID))
 		return -3;
 
