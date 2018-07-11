@@ -350,7 +350,7 @@ local int log_lock(struct log *log)
 	int fd;
 	struct stat st;
 
-	strcpy(log->end, ".lock");
+	strncpy(log->end, ".lock", sizeof(log->end) - 1); //strcpy(log->end, ".lock");
 	while ((fd = open(log->path, O_CREAT | O_EXCL, 0644)) < 0) {
 		if (errno != EEXIST)
 			return -1;
@@ -385,7 +385,7 @@ local int log_check(struct log *log)
 {
 	struct stat st;
 
-	strcpy(log->end, ".lock");
+	strncpy(log->end, ".lock", sizeof(log->end) - 1); //(log->end, ".lock");
 	if (stat(log->path, &st) || st.st_mtime != log->lock)
 		return 1;
 	log_touch(log);
@@ -397,7 +397,7 @@ local void log_unlock(struct log *log)
 {
 	if (log_check(log))
 		return;
-	strcpy(log->end, ".lock");
+	strncpy(log->end, ".lock", sizeof(log->end) - 1); //strcpy(log->end, ".lock");
 	unlink(log->path);
 	log->lock = 0;
 }
@@ -583,8 +583,8 @@ local int log_replace(struct log *log)
 	dest = malloc(strlen(log->path) + 1);
 	if (dest == NULL)
 		return -2;
-	strcpy(dest, log->path);
-	strcpy(log->end, ".temp");
+	strncpy(dest, log->path, sizeof(dest) - 1); //strcpy(dest, log->path);
+	strncpy(log->end, ".temp", sizeof(log->end) - 1); //strcpy(log->end, ".temp");
 	ret = rename(log->path, dest);
 	free(dest);
 	if (ret && errno != ENOENT)
@@ -625,7 +625,7 @@ local int log_compress(struct log *log, unsigned char *data, size_t len)
 			return -2;
 
 		/* read in dictionary (last 32K of data that was compressed) */
-		strcpy(log->end, ".dict");
+		strncpy(log->end, ".dict", sizeof(log->end) - 1); //strcpy(log->end, ".dict");
 		fd = open(log->path, O_RDONLY, 0);
 		if (fd >= 0) {
 			dict = read(fd, buf, DICT);
@@ -875,7 +875,7 @@ gzlog *gzlog_open(char *path)
 	log = malloc(sizeof(struct log));
 	if (log == NULL)
 		return NULL;
-	strcpy(log->id, LOGID);
+	strncpy(log->id, LOGID, sizeof(log->id) - 1); //strcpy(log->id, LOGID);
 	log->fd = -1;
 
 	/* save path and end of path for name construction */
@@ -885,7 +885,7 @@ gzlog *gzlog_open(char *path)
 		free(log);
 		return NULL;
 	}
-	strcpy(log->path, path);
+	strncpy(log->path, path, sizeof(log->path) - 1); //strcpy(log->path, path);
 	log->end = log->path + n;
 
 	/* gain exclusive access and verify log file -- may perform a
@@ -1010,7 +1010,7 @@ int gzlog_write(gzlog *logd, void *data, size_t len)
 		return -1;
 
 	/* create and write .add file */
-	strcpy(log->end, ".add");
+	strncpy(log->end, ".add", sizeof(log->end) - 1); //strcpy(log->end, ".add");
 	fd = open(log->path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 		return -1;
@@ -1053,7 +1053,7 @@ int gzlog_close(gzlog *logd)
 	/* free structure and return */
 	if (log->path != NULL)
 		free(log->path);
-	strcpy(log->id, "bad");
+	strncpy(log->id, "bad", sizeof(log->id) - 1); //strcpy(log->id, "bad");
 	free(log);
 	return 0;
 }
