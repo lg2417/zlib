@@ -242,7 +242,7 @@ void test_inflate(compr, comprLen, uncompr, uncomprLen)
     int err;
     z_stream d_stream; /* decompression stream */
 
-    strcpy((char*)uncompr, "garbage");
+	strncpy((char*)uncompr, "garbage", sizeof((char*)uncompr) - 1); //strcpy((char*)uncompr, "garbage");
 
     d_stream.zalloc = zalloc;
     d_stream.zfree = zfree;
@@ -338,7 +338,7 @@ void test_large_inflate(compr, comprLen, uncompr, uncomprLen)
     int err;
     z_stream d_stream; /* decompression stream */
 
-    strcpy((char*)uncompr, "garbage");
+	strncpy((char*)uncompr, "garbage", sizeof((char*)uncompr) - 1); //strcpy((char*)uncompr, "garbage");
 
     d_stream.zalloc = zalloc;
     d_stream.zfree = zfree;
@@ -417,7 +417,7 @@ void test_sync(compr, comprLen, uncompr, uncomprLen)
     int err;
     z_stream d_stream; /* decompression stream */
 
-    strcpy((char*)uncompr, "garbage");
+	strncpy((char*)uncompr, "garbage", sizeof((char*)uncompr) - 1); //strcpy((char*)uncompr, "garbage");
 
     d_stream.zalloc = zalloc;
     d_stream.zfree = zfree;
@@ -498,7 +498,7 @@ void test_dict_inflate(compr, comprLen, uncompr, uncomprLen)
     int err;
     z_stream d_stream; /* decompression stream */
 
-    strcpy((char*)uncompr, "garbage");
+	strncpy((char*)uncompr, "garbage", sizeof((char*)uncompr) - 1); //strcpy((char*)uncompr, "garbage");
 
     d_stream.zalloc = zalloc;
     d_stream.zfree = zfree;
