@@ -410,7 +410,7 @@ file descriptor log->fd. */
 local int log_head(struct log *log)
 {
 	int op;
-	unsigned char buf[HEAD + EXTRA];
+	unsigned char buf[HEAD + EXTRA] = {};
 
 	if (lseek(log->fd, 0, SEEK_SET) < 0 ||
 		read(log->fd, buf, HEAD + EXTRA) != HEAD + EXTRA ||
@@ -437,7 +437,7 @@ point in the process.  Return -1 if the write to foo.gz failed. */
 local int log_mark(struct log *log, int op)
 {
 	int ret;
-	unsigned char ext[EXTRA];
+	unsigned char ext[EXTRA] = {};
 
 	PUT8(ext, log->first);
 	PUT8(ext + 8, log->last);
@@ -462,7 +462,7 @@ there is a read or write failure on the foo.gz file */
 local int log_last(struct log *log, int last)
 {
 	int back, len, mask;
-	unsigned char buf[6];
+	unsigned char buf[6] = {};
 
 	/* determine the locations of the bytes and bits to modify */
 	back = log->last == log->first ? log->back : 8;
@@ -502,7 +502,7 @@ local int log_append(struct log *log, unsigned char *data, size_t len)
 {
 	uint put;
 	off_t end;
-	unsigned char buf[8];
+	unsigned char buf[8] = {};
 
 	/* set the last block last-bit and length, in case recovering an
 	interrupted append, then position the file pointer to append to the
